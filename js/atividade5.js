@@ -1,3 +1,59 @@
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const lista = document.getElementById("lista");
+
+function criarTarefa(texto) {
+  const li = document.createElement("li");
+  li.textContent = texto;
+
+  const botao = document.createElement("button");
+  botao.textContent = "Remover";
+
+  botao.addEventListener("click", function () {
+    li.remove();
+    salvar();
+  });
+
+  li.appendChild(botao);
+  lista.appendChild(li);
+}
+
+function salvar() {
+  const itens = document.querySelectorAll("#lista li");
+  const tarefas = [];
+
+  itens.forEach(li => {
+    const texto = li.firstChild.textContent;
+    tarefas.push(texto);
+  });
+
+  localStorage.setItem("tarefas", JSON.stringify(tarefas));
+}
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const texto = input.value.trim();
+  if (texto === "") return;
+
+  criarTarefa(texto);
+  salvar();
+
+  input.value = "";
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const dados = localStorage.getItem("tarefas");
+
+  if (!dados) return;
+
+  const tarefas = JSON.parse(dados);
+
+  tarefas.forEach(texto => {
+    criarTarefa(texto);
+  });
+});
+
 // ATIVIDADE 5 (base da atividade 3)
 // ==============================
 
